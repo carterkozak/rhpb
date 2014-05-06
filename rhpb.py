@@ -40,7 +40,7 @@ def fetch():
     try:
         arg = str(int(sys.argv[1].split('/')[-1]))
         f = urllib2.urlopen('http://pastebin.test.redhat.com/pastebin.php?dl=%s' % arg)
-        print f.read()
+        print f.read().replace('\r', '') # Because we don't use dos...
         f.close()
     except:
         # Could probably do some better exception handling for
