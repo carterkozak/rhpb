@@ -15,6 +15,20 @@ def print_usage():
             "  EX: $ rhpb http://pastebin.test.redhat.com/{id}\n" +
             "  Hello, World!\n")
 
+def page(text):
+    if hasattr(os, 'system') and os.system('(less) 2>/dev/null') == 0:
+        # -F closes when text cal all be displayed
+        # -X will not clear the screen upon exit (like git log)
+        pipe = os.popen("less -F", 'w')
+        try:
+            pipe.write(text)
+            pipe.close()
+        except IOError:
+            # Broken pipe
+            pass
+    else:
+        print text
+
 def buildData(to_post):
     data = {}
     login = os.getlogin()
@@ -40,7 +54,7 @@ def fetch():
     try:
         arg = str(int(sys.argv[1].split('/')[-1]))
         f = urllib2.urlopen('http://pastebin.test.redhat.com/pastebin.php?dl=%s' % arg)
-        print f.read().replace('\r', '') # Because we don't use dos...
+        page(f.read().replace('\r', '')) # Because we don't use dos...
         f.close()
     except:
         # Could probably do some better exception handling for
