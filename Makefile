@@ -5,6 +5,6 @@ all:
 clean:
 	rm -rf *.pyo *.pyc rhpb
 install: all
-	cp rhpb /usr/local/bin/
+	sudo cp rhpb /usr/local/bin/
 uninstall:
-	rm -f /usr/local/bin/rhpb
+	sudo rm -f /usr/local/bin/rhpb
