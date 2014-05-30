@@ -32,8 +32,7 @@ def page(text):
 def buildData(to_post):
     data = {}
     login = os.getlogin()
-    if login != 'root':  # Erm, lets be anonymous
-        data['poster'] = login
+    data['poster'] = login if login != 'root' else 'user'
     data['code2'] = to_post
     data['expiry'] = 'd' # 1 day
     data['format'] = 'text'  # Could probably modify this
@@ -51,14 +50,18 @@ def post():
     print r.geturl()
 
 def fetch():
+    arg = None
     try:
         arg = str(int(sys.argv[1].split('/')[-1]))
         f = urllib2.urlopen('http://pastebin.test.redhat.com/pastebin.php?dl=%s' % arg)
         page(f.read().replace('\r', '')) # Because we don't use dos...
         f.close()
+    except urllib2.HTTPError, he:
+        if he.code == 404:
+            sys.stderr.write("Invalid pastebin ID: '%s'\n" % arg)
+        else:
+            sys.stderr.write("Network issue: %s\n" % he)
     except:
-        # Could probably do some better exception handling for
-        # network exceptions
         print_usage()
 
 arglen = len(sys.argv)
