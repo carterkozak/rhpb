@@ -42,12 +42,15 @@ def buildData(to_post):
     return urlencode(data)
 
 def post():
-    encoded = buildData(sys.stdin.read())
+    try:
+        encoded = buildData(sys.stdin.read())
 
-    request = urllib2.Request("http://pastebin.test.redhat.com/pastebin.php",
-            data=encoded, headers={'Content-type': 'application/x-www-form-urlencoded'})
-    r = urllib2.urlopen(request)
-    print r.geturl()
+        request = urllib2.Request("http://pastebin.test.redhat.com/pastebin.php",
+                data=encoded, headers={'Content-type': 'application/x-www-form-urlencoded'})
+        r = urllib2.urlopen(request)
+        print r.geturl()
+    except KeyboardInterrupt:
+        sys.stderr.write("Caught SIGINT, exiting.\n")
 
 def fetch():
     arg = None
